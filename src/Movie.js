@@ -5,23 +5,47 @@ import React from 'react'
 
 const Movie = ({movie}) => {
 
-  const {title , image , imDbRating , id } = movie
+  //const {title , image , imDbRating , id } = movie
+
+  // return (
+  //   <div className='movie'>
+
+  //     <div>
+  //       <p>{imDbRating}</p>
+  //     </div>
+
+  //       <div>
+  //           <img src={image} alt={title} />
+  //       </div> 
+
+  //       <div>
+  //         <span className='hidden'>{id}</span>
+  //         {/* <span>{order}</span> */}
+  //         <h3>{title}</h3>
+  //       </div>
+
+  //   </div>
+  // )
+
+  //!omdbapi
+
+  const {Poster, Title , Type , Year , imdbID} = movie
 
   return (
     <div className='movie'>
 
       <div>
-        <p>{imDbRating}</p>
+        <p>{Year}</p>
       </div>
 
         <div>
-            <img src={image} alt={title} />
+            <img src={Poster} alt={Title} />
         </div> 
 
         <div>
-          <span className='hidden'>{id}</span>
-          {/* <span>{order}</span> */}
-          <h3>{title}</h3>
+          <span className='hidden'>{imdbID}</span>
+          <span>{Type}</span>
+          <h3>{Title}</h3>
         </div>
 
     </div>
