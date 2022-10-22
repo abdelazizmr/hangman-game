@@ -53,7 +53,7 @@ const App = () => {
     //! displaying 250 top imdb movies when page loads
 
     useEffect(()=>{
-      //getMovies(null);
+      getMovies(null);
     },[])
   
     
