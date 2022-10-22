@@ -22,22 +22,39 @@ const App = () => {
 
   const getMovies = async(title)=>{
       //!fetching from imdb api using title and not
-      //const response = await fetch(`${title ? `https://imdb-api.com/API/Search/k_pp0slmxz/${title}` : 'https://imdb-api.com/en/API/Top250Movies/k_pp0slmxz' }`);
-      //!fetching from omdb using title
-      const response = await fetch(`http://www.omdbapi.com?apikey=d5cf1839&s=${title}`)
-      const data = await response.json();
+      const response = await fetch(`${title ? `https://imdb-api.com/API/Search/k_pp0slmxz/${title}` : 'https://imdb-api.com/en/API/Top250Movies/k_pp0slmxz' }`);
 
-      console.log(data.Search)
+      //!fetching from omdb api using title
+      //const response = await fetch(`http://www.omdbapi.com?apikey=d5cf1839&s=${title}`)
+
+      //!=>data.results for movies with title
+      //!=>data.items for top 250 movies
+
+      if (title == null){
+        const data = await response.json();
+
+        console.log(data.items)
       
-      setMovies(data.Search)
+        setMovies(data.items)
+
+      }else if (title !== null){
+        const data = await response.json();
+
+        console.log(data.results)
+      
+        setMovies(data.results)
+      }
+
+
+      
       
   }
 
     //! displaying 250 top imdb movies when page loads
 
-    // useEffect(()=>{
-    //   getMovies();
-    // },[])
+    useEffect(()=>{
+      //getMovies(null);
+    },[])
   
     
 
@@ -55,7 +72,7 @@ const App = () => {
           {
           movies?.length > 0 ?(
             movies.map((movie,index)=>(
-            <Movie movie={movie} key={index} />
+            <Movie movie={movie} order={index+1} key={index} />
             ))
           ): (
             <div className='empty'>
