@@ -1,90 +1,107 @@
 import React from 'react'
-import './App.css';
-import { useEffect , useState } from 'react';
-import searchIcon from './search.svg'
-import Movie from './Movie.js';
+import Header from './components/Header'
+import Gallows from './components/Gallows'
+import WrongLetter from './components/WrongLetter'
+import Word from './components/Word'
+import FinalMessage from './components/FinalMessage'
+import Notification from './components/Notification'
+import { useState , useEffect } from 'react'
+import './App.css'
 
-//!omdb api
-//d5cf1839
-//http://www.omdbapi.com?apikey=d5cf1839&s=spiderman
-//!imdb api
-//https://imdb-api.com/en/API/Top250Movies/k_pp0slmxz
+//* Generate a random word
+const words = ['css','react','javascript','html','python','laravel','php','mysql']
 
+let word = words[Math.floor(Math.random() * words.length)]
 
 
 
 const App = () => {
+  const [playable, setplayable] = useState(true)
+  const [correctLetters , setcorrectLetters] = useState([])
+  const [wrongLetters , setwrongLetters] = useState([])
+  const [notif , setnotif]  = useState(false)
 
-    const [movies , setMovies] = useState([]);
-    const [input , setInput] = useState('');
-
-    
-
-  const getMovies = async(title)=>{
-      //!fetching from imdb api using title and not
-      const response = await fetch(`${title ? `https://imdb-api.com/API/Search/k_pp0slmxz/${title}` : 'https://imdb-api.com/en/API/Top250Movies/k_pp0slmxz' }`);
-
-      //!fetching from omdb api using title
-      //const response = await fetch(`http://www.omdbapi.com?apikey=d5cf1839&s=${title}`)
-
-      //!=>data.results for movies with title
-      //!=>data.items for top 250 movies
-
-      if (title == null){
-        const data = await response.json();
-
-        console.log(data.items)
-      
-        setMovies(data.items)
-
-      }else if (title !== null){
-        const data = await response.json();
-
-        console.log(data.results)
-      
-        setMovies(data.results)
-      }
-
-
-      
-      
+  //* this function for the repition notif it sets true and false after 1s
+  const show = (setter)=>{
+    setter(true)
+    setTimeout(()=>{
+      setter(false)
+    },1500)
   }
 
-    //! displaying 250 top imdb movies when page loads
-
-    useEffect(()=>{
-      getMovies(null);
-    },[])
-  
+  //* this will render when correct or wrong or playable states change
+  useEffect(()=>{
+  //* Entering a guess
+  const handlePress = (e)=>{
+    if (e.keyCode >= 65 && e.keyCode <= 90) {
+      let letter = e.key.toLowerCase()
+      console.log(letter);
+      let arr = word.split('')
     
+    if (playable){
+      if (arr.includes(letter)){
+            if (!correctLetters.includes(letter)){
+              setcorrectLetters(currentletters=>[...currentletters,letter])
+            }else{
+              show(setnotif)
+            }
+      }else{
+            if (!wrongLetters.includes(letter)){
+              setwrongLetters(currentletters=>[...currentletters,letter])
+            }else{
+              show(setnotif)
+            }
+      }
+    }
+
+    }
+}
+
+
+  window.addEventListener("keydown",handlePress);
+
+  return () => window.removeEventListener('keydown', handlePress);
+  
+},[correctLetters,wrongLetters,playable,notif])
+
+
+//*playing again and reseting
+const playAgain = ()=>{
+  setplayable(true)
+  setcorrectLetters([])
+  setwrongLetters([])
+  word = words[Math.floor(Math.random() * words.length)]
+}
+
 
   
-    return (
-      <div className='app'>
-        <h1>MovieLand</h1>
-        <div className='search'>
-          <input type="text" placeholder='search a movie'
-        value={input} onChange={(e)=>setInput(e.target.value)} /> 
-        <img src={searchIcon} alt="search" onClick={()=> getMovies(input)}/>
-        </div>
+  
 
-        <div className='container'>
-          {
-          movies?.length > 0 ?(
-            movies.map((movie,index)=>(
-            <Movie movie={movie} order={index+1} key={index} />
-            ))
-          ): (
-            <div className='empty'>
-              <h2>No movies found</h2>
-            </div>
-          )
-        }
-        </div>
 
+  return (
+    <>
+      <Header/>
+
+      <div className='game-container'>
+          
+        <Gallows wrongLetters={wrongLetters}/>
+
+        <WrongLetter wrongLetters={wrongLetters} />
 
       </div>
-    )
+      
+      <Word word={word} correctLetters={correctLetters}/>
+
+      <FinalMessage correctLetters={correctLetters} wrongLetters={wrongLetters} word={word} setPlayable={setplayable} playAgain={playAgain} />
+      
+      <Notification shownotification={notif} />
+    </>
+  )
 }
 
 export default App
+
+
+
+
+
