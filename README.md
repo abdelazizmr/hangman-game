@@ -1,3 +1,12 @@
-# REACT APP MOVIES 
+# Hangman Game
 
-=> API_URL : //https://imdb-api.com/en/API/Top250Movies/k_pp0slmxz
+
+ Markup : * words are
+              *react
+              *html
+              *css
+              *python
+              *php
+              *laravel
+              *mysql
+              *javascript
